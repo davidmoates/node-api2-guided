@@ -114,7 +114,7 @@ router.get("/:id/messages", (req, res) => {
 })
 // A route for specific message by ID
 // This handles GET /api/hubs/:hubId/messages/:messagesId
-router.get("/:hubId/messages/:messagesId", (req, res) => {
+router.get("/:hubId/messages/:messageId", (req, res) => {
   Hubs.findMessageById(req.params.hubId, req.params.messageId)
   .then(message => {
     if (message) {
@@ -128,6 +128,27 @@ router.get("/:hubId/messages/:messagesId", (req, res) => {
     console.log(error);
     res.status(500).json({
       message: 'Could not get hub message',
+    });
+  });
+})
+
+// A route for creating a message
+// This handles POST /api/hubs/:id/messages
+router.post("/:id/messages", (req, res) => {
+  const { sender, text } = req.body
+  if (!sender || !text) {
+    return res.status(400).json({ message: "Need sender and text value" })
+  }
+
+  Hubs.addMessage(req.params.id, req.body) // you can also say { sender, text }
+  .then(newMessage => {
+      res.status(201).json(newMessage)
+  })
+  .catch(error => {
+    // log error to database
+    console.log(error);
+    res.status(500).json({
+      message: 'Could not create hub message',
     });
   });
 })

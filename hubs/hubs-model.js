@@ -63,8 +63,9 @@ function findMessageById(hubId, id) {
     .first();
 }
 
-async function addMessage(message) {
-  const [id] = await db('messages').insert(message);
+async function addMessage(hubId, message) {
+  const data = { hub_id: hubId, ...message }
+  const [id] = await db('messages').insert(data);
 
-  return findMessageById(id);
+  return findMessageById(hubId, id);
 }
