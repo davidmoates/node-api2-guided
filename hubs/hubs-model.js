@@ -14,7 +14,7 @@ module.exports = {
 };
 
 function find(query) {
-  const { page = 1, limit = 2, sortby = 'id', sortdir = 'asc' } = query;
+  const { page = 1, limit = 100, sortby = 'id', sortdir = 'asc' } = query;
   const offset = limit * (page - 1);
 
   let rows = db('hubs')
@@ -57,9 +57,9 @@ function findHubMessages(hubId) {
 }
 
 // You Do
-function findMessageById(id) {
+function findMessageById(hubId, id) {
   return db('messages')
-    .where({ id })
+    .where({ id, hub_id: hubId })
     .first();
 }
 
